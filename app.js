@@ -1,13 +1,13 @@
 import Complex from './complex.js';
 import SmithChart, { TAB10COLORS } from './smith.js';
-import { computeImpedances } from './calculator.js';
+import { computeImpedances, matchImpedance } from './calculator.js';
 
 const circuitDom = document.getElementById('circuit');
 const canvas = document.getElementById('smith-chart');
 const chart = new SmithChart(canvas);
 const paramters = {
   frequency: 100e6,
-  zl: new Complex(40, 10),
+  zl: new Complex(10, 30),
 };
 
 function humanReadable(value) {
@@ -31,7 +31,7 @@ function refreshCircuitColors() {
   }
 }
 
-function addComponent(type, value, orientation) {
+function addComponent({ type, value, orientation }) {
   const elementsLength = circuitDom.querySelectorAll('.element').length;
   const template = document
     .getElementById(`${type}-template-${orientation}`)
@@ -114,14 +114,23 @@ function init() {
     handleCircuitChange();
   });
 
-  const network = [
-    { type: 'capacitor', value: 111.92e-12, orientation: 'shunt' },
-    { type: 'inductor', value: 45.67e-9, orientation: 'series' },
-    { type: 'capacitor', value: 95.5e-12, orientation: 'shunt' },
-  ];
+  document.getElementById('calc-btn').addEventListener('click', (e) => {
+    e.preventDefault();
+    const matchResults = matchImpedance(paramters.zl, 50, paramters.frequency);
+    // remove all .element elements
+    const elements = Array.from(circuitDom.querySelectorAll('.element'));
+    elements.forEach((element) => element.remove());
+    for (let element of matchResults[0]) {
+      console.log(element);
+      addComponent(element);
+    }
+    handleCircuitChange();
+  });
+
+  const network = matchImpedance(paramters.zl, 50, paramters.frequency)[0];
 
   for (const element of network) {
-    addComponent(element.type, element.value, element.orientation);
+    addComponent(element);
   }
 
   const directions = [];

@@ -74,7 +74,13 @@ select {
   border-style: solid;
   border-radius: 5px;
   border-width: 1px;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
+}
+
+#calc-btn {
+  display: block;
+  width: 100%;
+  margin-bottom: 30px;
 }
 
 .paramters .label {

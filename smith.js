@@ -282,6 +282,6 @@ export default class SmithChart {
     }
 
     let [x, y] = this.rx2xy(zl.re, zl.im);
-    this.drawMarker(x, y, 8, '#f00');
+    this.drawMarker(x, y, 8, '#666');
   }
 }
