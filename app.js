@@ -117,7 +117,7 @@ function init() {
   document.getElementById('calc-btn').addEventListener('click', (e) => {
     e.preventDefault();
     const matchResults = matchImpedance(paramters.zl, 50, paramters.frequency);
-    // remove all .element elements
+
     const elements = Array.from(circuitDom.querySelectorAll('.element'));
     elements.forEach((element) => element.remove());
     for (let element of matchResults[0]) {

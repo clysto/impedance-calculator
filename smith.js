@@ -99,13 +99,22 @@ export default class SmithChart {
       this.ctx.rotate(-Math.PI / 2);
     }
     if (bgColor) {
-      this.ctx.fillStyle = bgColor;
-      this.ctx.fillRect(
-        -textWidth / 2 - 2,
-        -textHeight / 2 - 2,
-        textWidth + 4,
-        textHeight + 4
-      );
+      if (bgColor === 'clear') {
+        this.ctx.clearRect(
+          -textWidth / 2 - 2,
+          -textHeight / 2 - 2,
+          textWidth + 4,
+          textHeight + 4
+        );
+      } else {
+        this.ctx.fillStyle = bgColor;
+        this.ctx.fillRect(
+          -textWidth / 2 - 2,
+          -textHeight / 2 - 2,
+          textWidth + 4,
+          textHeight + 4
+        );
+      }
     }
     this.ctx.fillStyle = color;
     this.ctx.fillText(text, 0, 0);
@@ -161,7 +170,7 @@ export default class SmithChart {
         r.toFixed(1),
         14,
         '#000',
-        '#fff',
+        'clear',
         true
       );
     });
