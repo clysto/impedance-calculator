@@ -1,0 +1,125 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Barlow', sans-serif;
+}
+button {
+  cursor: pointer;
+}
+
+button,
+input,
+select {
+  font-family: 'Barlow', sans-serif;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.app {
+  display: flex;
+}
+
+.schematic {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  margin-right: 4px;
+}
+
+.schematic #circuit {
+  flex: 1;
+}
+
+.diagram {
+  margin-left: 4px;
+  border: 1px dashed;
+  border-radius: 5px;
+}
+
+#circuit {
+  display: flex;
+}
+
+.element input {
+  max-width: 100%;
+  border: none;
+  font-size: 18px;
+  outline: none;
+}
+
+.element select {
+  display: block;
+  width: 100%;
+}
+
+.element button[name='delete'] {
+  width: calc(100% - 10px);
+  margin: 0 5px;
+  margin-top: 5px;
+}
+
+.element .controls {
+  padding: 5px;
+}
+
+.paramters {
+  background-color: #eeeeee;
+  display: block;
+  padding: 10px;
+  border-style: solid;
+  border-radius: 5px;
+  border-width: 1px;
+  margin-bottom: 50px;
+}
+
+.paramters .label {
+  display: inline-block;
+  width: 200px;
+}
+
+.paramters .unit {
+  margin-left: 3px;
+}
+
+.paramters .form-control {
+  display: flex;
+  align-items: center;
+  padding: 2px 0;
+}
+
+.add-component-btn {
+  width: 120px;
+  margin-top: 3px;
+}
+
+hr {
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #ccc;
+}
+
+.title {
+  margin: 0;
+  margin-top: 40px;
+  text-align: center;
+}
+
+.footer {
+  text-align: right;
+  font-size: 14px;
+  color: #7a7a7a;
+  margin: 0px 0;
+}
+
+.color {
+  width: calc(100% - 10px);
+  margin: 0 5px;
+  height: 30px;
+  background-color: #fff;
+  border-radius: 5px;
+}

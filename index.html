@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RF Impedance Matching Calculator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1 class="title">RF Impedance Matching Calculator</h1>
+      <hr />
+      <div class="app">
+        <div class="schematic">
+          <form id="paramters" class="paramters">
+            <div class="form-control">
+              <div class="label">Frequency:</div>
+              <input name="frequency" type="number" value="100" />
+              <span class="unit">MHz</span>
+            </div>
+            <div class="form-control">
+              <div class="label">Real Load Impedance:</div>
+              <input name="load-real" type="number" value="40" />
+              <span class="unit">Ω</span>
+            </div>
+            <div class="form-control">
+              <div class="label">Imaginary Load Impedance:</div>
+              <input name="load-imag" type="number" value="10" />
+              <span class="unit">Ω</span>
+            </div>
+          </form>
+          <div id="circuit">
+            <div style="width: 80px">
+              <svg width="80" height="120">
+                <path
+                  class="part"
+                  fill="none"
+                  stroke="black"
+                  stroke-width="1"
+                  d="M40,10 L80,10 M40,110 L80,110 M40,10 L40,35 M30,35 L50,35 L50,85 L30,85 L30,35 L50,85 M50,35 L30,85 M40,85 L40,110"
+                ></path>
+              </svg>
+            </div>
+          </div>
+          <div>
+            <div>
+              <button
+                class="add-component-btn"
+                data-type="capacitor"
+                data-orientation="series"
+              >
+                Series Capacitor
+              </button>
+              <button
+                class="add-component-btn"
+                data-type="capacitor"
+                data-orientation="shunt"
+              >
+                Shunt Capacitor
+              </button>
+            </div>
+            <div>
+              <button
+                class="add-component-btn"
+                data-type="inductor"
+                data-orientation="series"
+              >
+                Series Inductor
+              </button>
+              <button
+                class="add-component-btn"
+                data-type="inductor"
+                data-orientation="shunt"
+              >
+                Shunt Inductor
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="diagram">
+          <canvas id="smith-chart" width="500" height="500"> </canvas>
+        </div>
+      </div>
+      <hr />
+      <p class="footer">
+        © 2025 RF Impedance Matching Calculator. All rights reserved. Made by
+        Yachen.
+      </p>
+    </div>
+
+    <template id="capacitor-template-series">
+      <div
+        class="element"
+        style="width: 80px"
+        data-orientation="series"
+        data-type="capacitor"
+      >
+        <svg width="80" height="120">
+          <path
+            stroke="black"
+            stroke-width="1"
+            d="M0,10 L35,10 M35,0 L35,20 M45,0 L45,20 M45,10 L80,10"
+          ></path>
+          <path stroke="black" stroke-width="1" d="M0,110 80,110"></path>
+        </svg>
+        <form class="controls">
+          <input name="value" type="number" step="0.1" />
+          <select name="unit">
+            <option value="1e-12">pF</option>
+            <option value="1e-9">nF</option>
+            <option value="1e-6">μF</option>
+            <option value="1e-3">mF</option>
+            <option value="1">F</option>
+          </select>
+        </form>
+        <div class="color"></div>
+        <button name="delete">Delete</button>
+      </div>
+    </template>
+
+    <template id="capacitor-template-shunt">
+      <div
+        class="element"
+        style="width: 80px"
+        data-orientation="shunt"
+        data-type="capacitor"
+      >
+        <svg width="80" height="120">
+          <path
+            stroke="black"
+            stroke-width="1"
+            d="M0,10 L80,10 M40,10 L40,55 M30,55 L50,55 M30,65 L50,65, M40,65 L40,110"
+          ></path>
+          <path stroke="black" stroke-width="1" d="M0,110 80,110"></path>
+        </svg>
+        <form class="controls">
+          <input name="value" type="number" step="0.1" />
+          <select name="unit">
+            <option value="1e-12">pF</option>
+            <option value="1e-9">nF</option>
+            <option value="1e-6">μF</option>
+            <option value="1e-3">mF</option>
+            <option value="1">F</option>
+          </select>
+        </form>
+        <div class="color"></div>
+        <button name="delete">Delete</button>
+      </div>
+    </template>
+
+    <template id="inductor-template-series">
+      <div
+        class="element"
+        style="width: 80px"
+        data-orientation="series"
+        data-type="inductor"
+      >
+        <svg width="80" height="120">
+          <path
+            class="part"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+            d="M0,10 L15,10 A5,8,0,1,1,25,10 A5,8,0,1,1,35,10 A5,8,0,1,1,45,10 A5,8,0,1,1,55,10 A5,8,0,1,1,65,10 L80,10"
+          ></path>
+          <path stroke="black" stroke-width="1" d="M0,110 80,110"></path>
+        </svg>
+        <form class="controls">
+          <input name="value" type="number" step="0.1" />
+          <select name="unit">
+            <option value="1e-12">pH</option>
+            <option value="1e-9">nH</option>
+            <option value="1e-6">μH</option>
+            <option value="1e-3">mH</option>
+            <option value="1">H</option>
+          </select>
+        </form>
+        <div class="color"></div>
+        <button name="delete">Delete</button>
+      </div>
+    </template>
+
+    <template id="inductor-template-shunt">
+      <div
+        class="element"
+        style="width: 80px"
+        data-orientation="shunt"
+        data-type="inductor"
+      >
+        <svg width="80" height="120">
+          <path
+            class="part"
+            fill="none"
+            stroke="black"
+            stroke-width="1"
+            d="M0,10 L80,10 M40,10 L40,35 A8,5,0,1,1,40,45 A8,5,0,1,1,40,55 A8,5,0,1,1,40,65 A8,5,0,1,1,40,75 A8,5,0,1,1,40,85 L40,110"
+          ></path>
+          <path stroke="black" stroke-width="1" d="M0,110 80,110"></path>
+        </svg>
+        <form class="controls">
+          <input name="value" type="number" step="0.1" />
+          <select name="unit">
+            <option value="1e-12">pH</option>
+            <option value="1e-9">nH</option>
+            <option value="1e-6">μH</option>
+            <option value="1e-3">mH</option>
+            <option value="1">H</option>
+          </select>
+        </form>
+        <div class="color"></div>
+        <button name="delete">Delete</button>
+      </div>
+    </template>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
