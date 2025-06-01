@@ -76,7 +76,6 @@ export function matchImpedance(zl, z0, f) {
       const c = 1 / (-x1 * z0) / (2 * Math.PI * f);
       net.push({ type: 'capacitor', value: c, orientation: 'series' });
     } else {
-      const net = [];
       // series inductor
       const l = (x1 * z0) / (2 * Math.PI * f);
       net.push({ type: 'inductor', value: l, orientation: 'series' });

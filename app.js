@@ -94,7 +94,7 @@ function init() {
       e.preventDefault();
       const type = e.target.dataset.type;
       const orientation = e.target.dataset.orientation;
-      addComponent(type, 0, orientation);
+      addComponent({ type, value: 0, orientation });
       handleCircuitChange();
     });
   });
@@ -121,7 +121,6 @@ function init() {
     const elements = Array.from(circuitDom.querySelectorAll('.element'));
     elements.forEach((element) => element.remove());
     for (let element of matchResults[0]) {
-      console.log(element);
       addComponent(element);
     }
     handleCircuitChange();
