@@ -20,10 +20,19 @@ select {
   max-width: 1000px;
   margin: 0 auto;
   margin-top: 30px;
-  padding: 16px;
   background-color: #ffffff;
-  border-radius: 10px;
   box-shadow: 3px 6px 13px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.title-bar {
+  background: linear-gradient(90deg, #00057e, #3b7dc9);
+  padding: 4px 8px;
+  color: #ffffff;
+}
+
+.content {
+  padding: 16px;
 }
 
 .app {
