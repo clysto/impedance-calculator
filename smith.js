@@ -14,8 +14,9 @@ export const TAB10COLORS = [
 ];
 
 export default class SmithChart {
-  constructor(canvas) {
+  constructor(canvas, zo = 50) {
     this.canvas = canvas;
+    this.zo = zo;
     /**
      * @type {CanvasRenderingContext2D}
      */
@@ -34,7 +35,62 @@ export default class SmithChart {
     this.ctx.scale(dpr, dpr);
 
     this.padding = 50;
+    this.mouseZ = null;
+
+    // Add mousemove event listener
+    canvas.addEventListener('mousemove', this.handleMouseMove.bind(this));
+
     this.update();
+  }
+
+  handleMouseMove(event) {
+    const rect = this.canvas.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+
+    const cx = this.width / 2;
+    const cy = this.height / 2;
+    const scale = this.width / 2 - this.padding;
+
+    const normX = (x - cx) / scale;
+    const normY = (cy - y) / scale;
+
+    const mag = Math.sqrt(normX * normX + normY * normY);
+    if (mag > 1) {
+      this.mouseZ = null;
+      this.drawMouseZLabel();
+      return;
+    }
+
+    const refl = new Complex(normX, normY);
+    // Z = (1 + Γ) / (1 - Γ)
+    const z = Complex.div(Complex.add(1, refl), Complex.sub(1, refl));
+    this.mouseZ = z;
+    this.drawMouseZLabel();
+  }
+
+  // Draw Z label at lower right corner if mouseZ is present
+  drawMouseZLabel() {
+    const labelWidth = 200;
+    const labelHeight = 30;
+    this.ctx.clearRect(
+      this.width - labelWidth,
+      this.height - labelHeight,
+      labelWidth,
+      labelHeight
+    );
+    if (!this.mouseZ) return;
+    const z = Complex.mul(this.mouseZ, this.zo);
+    const label = `Z = ${z.re.toFixed(2)} ${z.im >= 0 ? '+' : '-'} ${Math.abs(
+      z.im
+    ).toFixed(2)}j`;
+    this.ctx.save();
+    this.ctx.font = '14px DejaVu Sans';
+    this.ctx.textAlign = 'right';
+    this.ctx.textBaseline = 'bottom';
+    this.ctx.fillStyle = '#000';
+    this.ctx.fillText(label, this.width - 20, this.height - 10);
+    this.ctx.restore();
   }
 
   rx2xy(r, x) {
@@ -185,6 +241,14 @@ export default class SmithChart {
     });
     this.drawText(-1 - scale, 0, '0', 14, '#000');
     this.drawText(1 + scale, 0, '∞', 14, '#000');
+
+    this.ctx.save();
+    this.ctx.font = '14px DejaVu Sans';
+    this.ctx.textAlign = 'left';
+    this.ctx.textBaseline = 'bottom';
+    this.ctx.fillStyle = '#000';
+    this.ctx.fillText(`Zo = ${this.zo}Ω`, 20, this.height - 10);
+    this.ctx.restore();
   }
 
   drawRCircle(r, width = 1, color = '#000') {
@@ -262,10 +326,10 @@ export default class SmithChart {
   }
 
   drawImpeancesTrace(zArr, directions) {
-    const zl = Complex.div(zArr[0], 50);
+    const zl = Complex.div(zArr[0], this.zo);
     for (let i = 1; i < zArr.length; i++) {
-      const prevZ = Complex.div(zArr[i - 1], 50);
-      const z = Complex.div(zArr[i], 50);
+      const prevZ = Complex.div(zArr[i - 1], this.zo);
+      const z = Complex.div(zArr[i], this.zo);
       const dir = directions[i - 1];
       const color = TAB10COLORS[(i - 1) % TAB10COLORS.length];
 

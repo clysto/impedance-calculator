@@ -2,13 +2,14 @@ import Complex from './complex.js';
 import SmithChart, { TAB10COLORS } from './smith.js';
 import { computeImpedances, matchImpedance } from './calculator.js';
 
-const circuitDom = document.getElementById('circuit');
-const canvas = document.getElementById('smith-chart');
-const chart = new SmithChart(canvas);
 const paramters = {
   frequency: 100e6,
   zl: new Complex(10, 30),
+  zo: 50,
 };
+const circuitDom = document.getElementById('circuit');
+const canvas = document.getElementById('smith-chart');
+const chart = new SmithChart(canvas, paramters.zo);
 
 function humanReadable(value) {
   const absVal = Math.abs(value);
@@ -104,19 +105,26 @@ function init() {
     const frequencyInput = document.querySelector('input[name=frequency]');
     const zlRealInput = document.querySelector('input[name=load-real]');
     const zlImagInput = document.querySelector('input[name=load-imag]');
+    const zoInput = document.querySelector('input[name=zo]');
 
     paramters.frequency = parseFloat(frequencyInput.value) * 1e6; // Convert MHz to Hz
     paramters.zl = new Complex(
       parseFloat(zlRealInput.value),
       parseFloat(zlImagInput.value)
     );
+    paramters.zo = parseFloat(zoInput.value);
+    chart.zo = paramters.zo;
 
     handleCircuitChange();
   });
 
   document.getElementById('calc-btn').addEventListener('click', (e) => {
     e.preventDefault();
-    const matchResults = matchImpedance(paramters.zl, 50, paramters.frequency);
+    const matchResults = matchImpedance(
+      paramters.zl,
+      paramters.zo,
+      paramters.frequency
+    );
 
     const elements = Array.from(circuitDom.querySelectorAll('.element'));
     elements.forEach((element) => element.remove());
@@ -126,7 +134,11 @@ function init() {
     handleCircuitChange();
   });
 
-  const network = matchImpedance(paramters.zl, 50, paramters.frequency)[0];
+  const network = matchImpedance(
+    paramters.zl,
+    paramters.zo,
+    paramters.frequency
+  )[0];
 
   for (const element of network) {
     addComponent(element);

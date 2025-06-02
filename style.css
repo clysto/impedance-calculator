@@ -1,9 +1,10 @@
-* {
+0* {
   box-sizing: border-box;
 }
 
 body {
   font-family: 'Barlow', sans-serif;
+  background-color: #494949;
 }
 button {
   cursor: pointer;
@@ -18,6 +19,11 @@ select {
 .container {
   max-width: 1000px;
   margin: 0 auto;
+  margin-top: 30px;
+  padding: 16px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  box-shadow: 3px 6px 13px 6px rgba(0, 0, 0, 0.1);
 }
 
 .app {
@@ -43,6 +49,11 @@ select {
 
 #circuit {
   display: flex;
+  padding: 20px 0;
+}
+
+.element:hover {
+  background-color: #e0e0e0;
 }
 
 .element input {
@@ -80,7 +91,7 @@ select {
 #calc-btn {
   display: block;
   width: 100%;
-  margin-bottom: 30px;
+  font-size: 16px;
 }
 
 .paramters .label {
@@ -111,7 +122,6 @@ hr {
 
 .title {
   margin: 0;
-  margin-top: 40px;
   text-align: center;
 }
 
